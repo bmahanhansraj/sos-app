@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  ::selection {
+    background-color: theme('colors.beacon');
+    color: theme('colors.void');
+  }
+  *:focus-visible {
+    outline: 2px solid theme('colors.beacon');
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .panel {
+    background-color: theme('colors.panel');
+    border: 1px solid theme('colors.hairline');
+    border-radius: 0.75rem;
+  }
+
+  .beacon-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .beacon-dot.is-live {
+      animation: beacon-pulse 1.6s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes beacon-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.45); }
+  50% { box-shadow: 0 0 0 4px rgba(255, 193, 7, 0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .radar-sweep {
+    background: conic-gradient(from 0deg, rgba(255, 193, 7, 0.22), transparent 30%);
+    animation: radar-spin 4s linear infinite;
+  }
+}
+@keyframes radar-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Recolor the Leaflet OSM tiles to sit naturally on a dark console */
+.dark-tiles {
+  filter: invert(1) hue-rotate(180deg) brightness(0.88) contrast(0.9) saturate(0.4);
+}
+.leaflet-container {
+  background: #121212;
+}
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: #1A1A1A;
+  color: #FFFFFF;
+}
+.leaflet-popup-content-wrapper {
+  border: 1px solid #2E2E2E;
+  border-radius: 0.5rem;
+}
