@@ -1,0 +1,65 @@
+# ============================================================================
+# SoS - Services On Site — one-click deploy blueprint for Render.com
+# ----------------------------------------------------------------------------
+# This single file deploys all three web pieces together: the backend API,
+# the public website, and the staff/agency portal. Don't edit this file by
+# hand -- just follow FOUNDER_DEPLOY_GUIDE.md, which walks through clicking
+# the "New > Blueprint" button on Render and pointing it at this repo.
+#
+# Two environment variables (VITE_API_URL on both website and portal) are
+# intentionally left for you to fill in by hand after the first deploy,
+# because Render needs to create the backend first before its URL exists to
+# copy. The guide explains exactly where to paste them -- it's two copy/paste
+# steps, not a coding task.
+# ============================================================================
+
+services:
+  # ------------------------------------------------------------------------
+  # 1) Backend API -- everything else talks to this
+  # ------------------------------------------------------------------------
+  - type: web
+    name: sos-backend
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: node src/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true # Render makes up a long random secret for you -- nothing to type in
+      - key: OTP_DEBUG_MODE
+        value: "false"
+      - key: CLIENT_ORIGIN
+        value: "*" # Safe to leave as-is for your first deploy. Tighten this once you have real
+        # website/portal URLs or a real domain -- see Step 4 in the guide for the one-line fix.
+
+  # ------------------------------------------------------------------------
+  # 2) Public website (sos.ind.in)
+  # ------------------------------------------------------------------------
+  - type: web
+    name: sos-website
+    runtime: static
+    rootDir: website
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false # <- you'll paste the backend's URL in here once it's deployed (Step 3 in the guide)
+      - key: VITE_PORTAL_URL
+        sync: false # <- you'll paste the portal's URL in here once it's deployed (Step 3 in the guide)
+
+  # ------------------------------------------------------------------------
+  # 3) Staff / agency portal ("the admin dashboard")
+  # ------------------------------------------------------------------------
+  - type: web
+    name: sos-portal
+    runtime: static
+    rootDir: admin-dashboard
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false # <- same backend URL as above (Step 3 in the guide)
