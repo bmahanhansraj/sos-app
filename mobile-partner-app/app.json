@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "SoS Partner",
+    "slug": "sos-partner-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "icon": "./assets/icon.png",
+    "plugins": [
+      ["expo-splash-screen", { "image": "./assets/splash.png", "resizeMode": "contain", "backgroundColor": "#121212" }]
+    ],
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.sos.partner",
+      "config": {
+        "googleMapsApiKey": "YOUR_GOOGLE_MAPS_IOS_KEY"
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "SoS Partner shares your location with dispatch and customers while you're online so jobs can be routed to you.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "SoS Partner can keep sharing your location in the background while you're online for a job, so the customer can track you.",
+        "NSCameraUsageDescription": "SoS Partner uses your camera to capture KYC documents for verification."
+      }
+    },
+    "android": {
+      "package": "com.sos.partner",
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "ACCESS_BACKGROUND_LOCATION", "CAMERA"],
+      "config": {
+        "googleMaps": {
+          "apiKey": "YOUR_GOOGLE_MAPS_ANDROID_KEY"
+        }
+      }
+    },
+    "extra": {
+      "apiUrl": "http://localhost:4000"
+    }
+  }
+}
