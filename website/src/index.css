@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  ::selection {
+    background-color: theme('colors.beacon');
+    color: theme('colors.void');
+  }
+  *:focus-visible {
+    outline: 2px solid theme('colors.beacon');
+    outline-offset: 2px;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  .panel {
+    background-color: theme('colors.panel');
+    border: 1px solid theme('colors.hairline');
+    border-radius: 0.75rem;
+  }
+
+  .beacon-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .beacon-dot.is-live {
+      animation: beacon-pulse 1.6s ease-in-out infinite;
+    }
+  }
+
+  /* Reveal-on-scroll utility, toggled by adding/removing .is-visible via
+     IntersectionObserver in the Reveal component. No-op (always visible)
+     under reduced-motion. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+}
+
+@keyframes beacon-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(255, 193, 7, 0);
+  }
+}
+
+/* The hero's signature element: concentric rings pinging outward from the
+   center marker, like a beacon sweeping for the nearest partner. */
+@keyframes radar-ping {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .radar-ring {
+    animation: radar-ping 3s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+  }
+}
